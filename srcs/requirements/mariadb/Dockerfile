@@ -1,6 +1,16 @@
-FROM alpine:3.17
+FROM debian:bullseye
 
-RUN apk update
-RUN apk add mysql mysql-client
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get -y install mariadb-server mariadb-client vim
 
-CMD [ "/bin/sh" ]
+RUN mkdir -p /var/run/mysqld && \
+    chown -R mysql:mysql /var/run/mysqld && \
+    chmod 777 /var/run/mysqld
+
+COPY ./tools/setting.sh /setting.sh
+RUN chmod +x /setting.sh
+
+ENTRYPOINT [ "sh", "/setting.sh" ]
+
+CMD ["mysqld", "--bind-address=0.0.0.0"]

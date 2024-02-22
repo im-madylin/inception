@@ -1,8 +1,9 @@
 version: '3.8'
 services:
   mariadb:
-    image: mariadb:11.2
     container_name: mariadb
+    build: requirements/mariadb
     restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_PW}
+    env_file:
+      - .env
+

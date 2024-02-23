@@ -2,6 +2,7 @@ version: '3.8'
 
 volumes:
   mariadb_data:
+    name: mariadb-data
     driver: local
     driver_opts:
       type: none
@@ -12,7 +13,7 @@ services:
   mariadb:
     container_name: mariadb
     build: requirements/mariadb
-    restart: always
+    # restart: always
     env_file:
       - .env
     volumes:

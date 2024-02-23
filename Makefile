@@ -1,6 +1,9 @@
 DOCKER_PATH = ./srcs/docker-compose.yml
+VOLUME_PATH = /Users/ihahyeon/docker_volume
+#/home/hahlee/data
 
 all : 
+	mkdir $(VOLUME_PATH)/mariadb/
 	docker-compose -f $(DOCKER_PATH) up -d --build
 
 clean :

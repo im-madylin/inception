@@ -1,4 +1,13 @@
 version: '3.8'
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_PATH}/mariadb
+      o: bind
+
 services:
   mariadb:
     container_name: mariadb
@@ -6,4 +15,6 @@ services:
     restart: always
     env_file:
       - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
 

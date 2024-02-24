@@ -1,18 +1,31 @@
-DOCKER_PATH = ./srcs/docker-compose.yml
+
 VOLUME_PATH = /Users/ihahyeon/docker_volume
 #/home/hahlee/data
 
-all : 
+DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yml
+
+all: up
+
+up:
 	mkdir $(VOLUME_PATH)/mariadb/
-	docker-compose -f $(DOCKER_PATH) up -d --build
+	docker compose -f $(DOCKER_COMPOSE_FILE) up -d --build
 
-clean :
-	docker-compose -f $(DOCKER_PATH) down
+down:
+	docker compose -f $(DOCKER_COMPOSE_FILE) down --volumes
 
-fclean : clean
-	sh clean.sh
+clean:
+	sudo docker-compose -f srcs/docker-compose.yml down -v --rmi all --remove-orphans
+	docker compose -f $(DOCKER_COMPOSE_FILE) down --rmi all --volumes
 
-re : fclean
-	$(MAKE) all
+fclean: clean
+	sudo rm -rf ${HOME}/data
+	sudo docker system prune --volumes --all --force
+	sudo docker network prune --force
+	sudo docker volume prune --force
+	@bash clean.sh
 
-.PHONY : all clean fclean re
+re:
+	@make fclean
+	@make all
+
+.PHONY: all build down clean fclean re

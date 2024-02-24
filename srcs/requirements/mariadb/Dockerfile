@@ -2,15 +2,19 @@ FROM debian:bullseye
 
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get -y install mariadb-server mariadb-client vim
+    apt-get -y install mariadb-server mariadb-client && \
+    apt-get -y install vim
 
 RUN mkdir -p /var/run/mysqld && \
     chown -R mysql:mysql /var/run/mysqld && \
     chmod 777 /var/run/mysqld
 
-COPY ./tools/setting.sh /setting.sh
-RUN chmod +x /setting.sh
+RUN rm -f /etc/mysql/mariadb.conf.d/50-server.cnf
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
-ENTRYPOINT [ "sh", "/setting.sh" ]
+COPY ./tools/setting.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/setting.sh
 
-CMD ["mysqld", "--bind-address=0.0.0.0"]
+RUN rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT [ "bash", "/usr/local/bin/setting.sh" ]

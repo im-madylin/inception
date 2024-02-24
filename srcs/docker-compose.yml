@@ -13,7 +13,7 @@ services:
   mariadb:
     container_name: mariadb
     build: requirements/mariadb
-    # restart: always
+    restart: always
     env_file:
       - .env
     volumes:

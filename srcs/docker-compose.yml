@@ -9,6 +9,14 @@ volumes:
       device: ${VOLUME_PATH}/mariadb
       o: bind
 
+  wordpress_data:
+    name: wordpress
+    driver: local
+    driver_opts:
+      type: none
+      device: ${VOLUME_PATH}/wordpress
+      o: bind
+
 services:
   mariadb:
     container_name: mariadb
@@ -18,4 +26,27 @@ services:
       - .env
     volumes:
       - mariadb_data:/var/lib/mysql
+    networks:
+      - intra
 
+  wordpress:
+    container_name: wordpress
+    build: requirements/wordpress
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html/wordpress
+    depends_on:
+      - mariadb
+    expose:
+      - "9000"
+    networks:
+      - intra
+    ports:
+      - "9000:9000"
+
+networks:
+  intra:
+    driver: bridge
+    name: intra

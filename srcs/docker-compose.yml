@@ -10,7 +10,7 @@ volumes:
       o: bind
 
   wordpress_data:
-    name: wordpress
+    name: wordpress-data
     driver: local
     driver_opts:
       type: none
